@@ -11,16 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.jorbital.jorbichef.Greeting
 import com.jorbital.jorbichef.android.theme.JorbichefTheme
+import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             JorbichefTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    GreetingView(Greeting().greet())
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    GreetingView()
                 }
             }
         }
@@ -28,7 +27,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun GreetingView(text: String) {
+fun GreetingView(greeting: Greeting = koinInject()) {
+    GreetingText(greeting.greet())
+}
+
+@Composable
+fun GreetingText(text: String) {
     Text(text = text)
 }
 
@@ -36,6 +40,6 @@ fun GreetingView(text: String) {
 @Composable
 fun DefaultPreview() {
     JorbichefTheme {
-        GreetingView("Hello, Android!")
+        GreetingText("Hello, Android!")
     }
 }

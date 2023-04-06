@@ -45,4 +45,6 @@ dependencies {
     implementation(composeBom)
     androidTestImplementation(composeBom)
     implementation(libs.bundles.compose)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 }

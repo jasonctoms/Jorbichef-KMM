@@ -1,7 +1,5 @@
 package com.jorbital.jorbichef
 
-interface Platform {
+expect class Platform() {
     val name: String
 }
-
-expect fun getPlatform(): Platform
