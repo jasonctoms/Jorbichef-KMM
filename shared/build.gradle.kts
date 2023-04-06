@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.apollo)
 }
 
 kotlin {
@@ -27,6 +28,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(libs.koin.core)
+                api(libs.apollo.runtime)
             }
         }
         val commonTest by getting {
@@ -53,6 +55,12 @@ kotlin {
             iosX64Test.dependsOn(this)
             iosArm64Test.dependsOn(this)
             iosSimulatorArm64Test.dependsOn(this)
+        }
+    }
+
+    apollo {
+        service("service") {
+            packageName.set("com.jorbital.jorbichef")
         }
     }
 }

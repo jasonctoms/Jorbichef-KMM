@@ -18,6 +18,8 @@ junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 
+apollo = "3.8.0"
+
 [libraries]
 # AndroidX
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
@@ -39,12 +41,15 @@ koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compos
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+# Apollo
+apollo-runtime = { group = "com.apollographql.apollo3", name = "apollo-runtime", version.ref = "apollo" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+apollo = { id = "com.apollographql.apollo3", version.ref = "apollo" }
 
 [bundles]
 compose = ["compose-foundation", "compose-ui", "compose-ui-tooling", "compose-ui-tooling-preview", "compose-material3", "activity-compose"]
