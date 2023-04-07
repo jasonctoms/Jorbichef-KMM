@@ -1,7 +1,11 @@
-query fetchIngredients{
+query getIngredients{
     ingredients{
         id
         name
-        type
+        tags{
+            id
+            name
+            resourceId
+        }
     }
 }
