@@ -1,5 +1,6 @@
 [versions]
 androidGradlePlugin = "7.4.2"
+google-services = "4.3.15"
 kotlin = "1.8.10"
 
 core = "1.10.0"
@@ -13,6 +14,10 @@ activityCompose = "1.7.0"
 
 koin = "3.4.0"
 koinAndroidxCompose = "3.4.3"
+
+firebase-kotlin = "1.8.0"
+
+coroutines = "1.7.0-Beta"
 
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
@@ -30,11 +35,15 @@ compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 # Koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koinAndroidxCompose" }
+# Firebase
+firebase-kotlin-auth = { group = "dev.gitlive", name = "firebase-auth", version.ref = "firebase-kotlin" }
+# Coroutines
+coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
@@ -43,6 +52,7 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 

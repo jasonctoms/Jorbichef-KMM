@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.jorbital.jorbichef.Greeting
 import com.jorbital.jorbichef.android.theme.JorbichefTheme
+import com.jorbital.jorbichef.auth.JorbichefAuth
 import com.jorbital.jorbichef.models.Ingredient
 import com.jorbital.jorbichef.repository.TestRepository
 import org.koin.compose.koinInject
@@ -35,9 +36,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun GreetingView(greeting: Greeting = koinInject(), test: TestRepository = koinInject()) {
+fun GreetingView(greeting: Greeting = koinInject(), test: TestRepository = koinInject(), auth: JorbichefAuth = koinInject()) {
     var ingredients by remember { mutableStateOf(emptyList<Ingredient>()) }
     LaunchedEffect(Unit){
+        auth.signInAnonymously()
         ingredients = test.getIngredients()
     }
     Column(){
