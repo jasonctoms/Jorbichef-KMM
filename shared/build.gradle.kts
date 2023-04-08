@@ -4,6 +4,7 @@ import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -29,8 +30,10 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.coroutines)
+                implementation(libs.serialization)
                 api(libs.koin.core)
                 api(libs.firebase.kotlin.auth)
+                api(libs.firebase.kotlin.firestore)
             }
         }
         val commonTest by getting {

@@ -1,5 +1,6 @@
 package com.jorbital.jorbichef
 
+import com.jorbital.jorbichef.api.FirestoreApi
 import com.jorbital.jorbichef.auth.JorbichefAuth
 import com.jorbital.jorbichef.repository.TestRepository
 import org.koin.core.module.dsl.singleOf
@@ -10,5 +11,6 @@ val commonModule = module {
     singleOf(::Greeting)
 
     singleOf(::JorbichefAuth)
+    singleOf(::FirestoreApi)
     singleOf(::TestRepository)
 }

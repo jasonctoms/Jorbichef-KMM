@@ -31,6 +31,13 @@ class JorbichefAuth {
             Result.failure(e)
         }
     }
+
+    fun assertUserId(): String {
+        if (currentUser?.uid != null) {
+            return currentUser!!.uid
+        }
+        throw NotLoggedInException()
+    }
 }
 
 enum class LoginState { ANONYMOUS, LOGGED_IN, LOGGED_OUT }

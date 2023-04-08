@@ -19,6 +19,8 @@ firebase-kotlin = "1.8.0"
 
 coroutines = "1.7.0-Beta"
 
+serialization = "1.5.0"
+
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
@@ -42,8 +44,11 @@ koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = 
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 # Firebase
 firebase-kotlin-auth = { group = "dev.gitlive", name = "firebase-auth", version.ref = "firebase-kotlin" }
+firebase-kotlin-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "firebase-kotlin" }
 # Coroutines
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+# Serialization
+serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
@@ -55,6 +60,7 @@ android-library = { id = "com.android.library", version.ref = "androidGradlePlug
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 [bundles]
 compose = ["compose-foundation", "compose-ui", "compose-ui-tooling", "compose-ui-tooling-preview", "compose-material3", "activity-compose"]
