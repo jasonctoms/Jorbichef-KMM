@@ -7,6 +7,10 @@ import com.jorbital.jorbichef.Database
 
 actual class DriverFactory(private val context: Context) {
     actual fun createDriver(): SqlDriver {
-        return AndroidSqliteDriver(Database.Schema, context, "database.db")
+        return AndroidSqliteDriver(
+            schema = Database.Schema,
+            context = context,
+            name = "database1.db",
+        )
     }
 }

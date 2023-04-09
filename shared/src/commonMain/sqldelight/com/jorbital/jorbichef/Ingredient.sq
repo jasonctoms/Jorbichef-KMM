@@ -1,0 +1,31 @@
+CREATE TABLE ingredient (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  resourceId TEXT
+);
+
+CREATE TABLE ingredient_tag (
+  ingredientId TEXT NOT NULL,
+  tagId TEXT NOT NULL,
+  PRIMARY KEY (ingredientId, tagId),
+  FOREIGN KEY (ingredientId) REFERENCES ingredient(id),
+  FOREIGN KEY (tagId) REFERENCES tag(id)
+);
+
+insertOrReplace:
+REPLACE INTO ingredient (id, name, resourceId) VALUES (?,?,?);
+
+connectTag:
+REPLACE INTO ingredient_tag (ingredientId, tagId) VALUES (?,?);
+
+
+selectAll:
+SELECT i.id, i.name, i.resourceId, t.id AS tagId, t.name AS tagName, t.resourceId AS tagResourceId
+FROM ingredient i
+LEFT JOIN (
+  SELECT it.ingredientId, t.id, t.name, t.resourceId
+  FROM ingredient_tag it
+  JOIN tag t ON it.tagId = t.id
+) t ON i.id = t.ingredientId
+ORDER BY i.id;
+

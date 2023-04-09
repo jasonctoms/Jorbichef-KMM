@@ -23,6 +23,17 @@ class FirestoreApi(private val auth: JorbichefAuth) {
         return defaultTags + customTags
     }
 
+    suspend fun getIngredients(): List<IngredientDocument> {
+        val defaultIngredients = firestore.collection(DEFAULT_INGREDIENTS).get().documents.map {
+            it.data(strategy = IngredientDocument.serializer())
+        }
+        val customIngredients = firestore.collection(USERS).document(auth.assertUserId())
+            .collection(INGREDIENTS).get().documents.map {
+                it.data(strategy = IngredientDocument.serializer())
+            }
+        return defaultIngredients + customIngredients
+    }
+
     suspend fun addCustomTag(tag: TagDocument.Custom) {
         firestore.collection(USERS).document(tag.userId).collection(TAGS)
             .document(tag.id)

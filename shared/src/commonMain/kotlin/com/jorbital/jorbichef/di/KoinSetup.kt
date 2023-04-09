@@ -1,5 +1,6 @@
 package com.jorbital.jorbichef.di
 
+import app.cash.sqldelight.db.SqlDriver
 import com.jorbital.jorbichef.Database
 import com.jorbital.jorbichef.Greeting
 import com.jorbital.jorbichef.Platform

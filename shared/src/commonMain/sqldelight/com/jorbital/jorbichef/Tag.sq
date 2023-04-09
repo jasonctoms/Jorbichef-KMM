@@ -1,11 +1,11 @@
-CREATE TABLE tags (
+CREATE TABLE tag (
   id TEXT NOT NULL PRIMARY KEY,
   name TEXT NOT NULL,
   resourceId TEXT
 );
 
 selectAll:
-SELECT * FROM tags;
+SELECT * FROM tag;
 
 insertOrReplace:
-REPLACE INTO tags (id, name, resourceId) VALUES (?, ?, ?);
+REPLACE INTO tag (id, name, resourceId) VALUES (?, ?, ?);
