@@ -16,10 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.jorbital.jorbichef.Greeting
+import com.jorbital.jorbichef.Tags
 import com.jorbital.jorbichef.android.theme.JorbichefTheme
-import com.jorbital.jorbichef.api.FirestoreApi
 import com.jorbital.jorbichef.auth.JorbichefAuth
-import com.jorbital.jorbichef.models.Ingredient
 import com.jorbital.jorbichef.repository.TestRepository
 import org.koin.compose.koinInject
 
@@ -37,17 +36,17 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun GreetingView(greeting: Greeting = koinInject(), test: TestRepository = koinInject(), auth: JorbichefAuth = koinInject(), api: FirestoreApi = koinInject()) {
-    var ingredients by remember { mutableStateOf(emptyList<Ingredient>()) }
+fun GreetingView(greeting: Greeting = koinInject(), test: TestRepository = koinInject(), auth: JorbichefAuth = koinInject()) {
+    var tags by remember { mutableStateOf(emptyList<Tags>()) }
     LaunchedEffect(Unit){
         auth.signInAnonymously()
-        api.generateDefaultData()
-        ingredients = test.getIngredients()
+        test.syncFromApi()
+        tags = test.getTags()
     }
     Column(){
         GreetingText(greeting.greet())
-        ingredients.forEach { ingredient ->
-            Text(ingredient.name)
+        tags.forEach { tag ->
+            Text(tag.name)
         }
     }
 }

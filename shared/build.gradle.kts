@@ -1,10 +1,9 @@
-import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.exclude
-
 @Suppress("DSL_SCOPE_VIOLATION") // Remove when fixed https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.sqdelight)
 }
 
 kotlin {
@@ -41,7 +40,11 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val androidMain by getting
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.sqldelight.driver.android)
+            }
+        }
         val androidUnitTest by getting
         val iosX64Main by getting
         val iosArm64Main by getting
@@ -51,6 +54,9 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+            dependencies {
+                implementation(libs.sqldelight.driver.native)
+            }
         }
         val iosX64Test by getting
         val iosArm64Test by getting
@@ -60,6 +66,14 @@ kotlin {
             iosX64Test.dependsOn(this)
             iosArm64Test.dependsOn(this)
             iosSimulatorArm64Test.dependsOn(this)
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("com.jorbital.jorbichef")
         }
     }
 }

@@ -12,16 +12,15 @@ import dev.gitlive.firebase.firestore.firestore
 class FirestoreApi(private val auth: JorbichefAuth) {
     private val firestore by lazy { Firebase.firestore }
 
-    suspend fun generateDefaultData() {
-        defaultTags.forEach {
-            firestore.collection(DEFAULT_TAGS).document(it.id)
-                .set(TagDocument.serializer(), it, encodeDefaults = false)
+    suspend fun getTags(): List<TagDocument> {
+        val defaultTags = firestore.collection(DEFAULT_TAGS).get().documents.map {
+            it.data(strategy = TagDocument.serializer())
         }
-        defaultIngredients.forEach {
-            firestore.collection(DEFAULT_INGREDIENTS).document(it.id)
-                .set(IngredientDocument.serializer(), it, encodeDefaults = false)
-        }
-        writeTestData()
+        val customTags = firestore.collection(USERS).document(auth.assertUserId())
+            .collection(TAGS).get().documents.map {
+                it.data(strategy = TagDocument.serializer())
+            }
+        return defaultTags + customTags
     }
 
     suspend fun addCustomTag(tag: TagDocument.Custom) {
@@ -56,13 +55,25 @@ class FirestoreApi(private val auth: JorbichefAuth) {
         }
     }
 
-    suspend fun updateWeeklyMenu(menu: WeeklyMenuDocument){
+    suspend fun updateWeeklyMenu(menu: WeeklyMenuDocument) {
         firestore.collection(USERS).document(menu.userId).collection(MENU)
             .document(menu.id)
             .set(
                 strategy = WeeklyMenuDocument.serializer(),
                 data = menu
             )
+    }
+
+    suspend fun generateDefaultData() {
+        defaultTags.forEach {
+            firestore.collection(DEFAULT_TAGS).document(it.id)
+                .set(TagDocument.serializer(), it, encodeDefaults = false)
+        }
+        defaultIngredients.forEach {
+            firestore.collection(DEFAULT_INGREDIENTS).document(it.id)
+                .set(IngredientDocument.serializer(), it, encodeDefaults = false)
+        }
+        writeTestData()
     }
 
     suspend fun writeTestData() {

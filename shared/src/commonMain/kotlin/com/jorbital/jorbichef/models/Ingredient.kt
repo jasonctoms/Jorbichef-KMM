@@ -7,5 +7,3 @@ data class Ingredient(
     val userId: String? = null,
     val tags: List<Tag>,
 )
-
-data class IngredientInput(val name: String, val tags: List<Tag>)
