@@ -7,7 +7,7 @@ data class RecipeDocument(
     val id: String,
     val name: String,
     val userId: String,
-    val instructions: String,
+    val instructions: String?,
     val url: String?,
     val imageUrl: String?,
     val tagIds: List<String>,

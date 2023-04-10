@@ -1,8 +1,6 @@
 package com.jorbital.jorbichef.models
 
 data class WeeklyMenu(
-    val id: String,
-    val userId: String,
     val monday: List<Recipe>,
     val tuesday: List<Recipe>,
     val wednesday: List<Recipe>,

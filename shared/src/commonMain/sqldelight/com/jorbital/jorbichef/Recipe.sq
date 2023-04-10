@@ -1,0 +1,47 @@
+CREATE TABLE recipe (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  instructions TEXT,
+  url TEXT,
+  imageUrl TEXT
+);
+
+CREATE TABLE recipe_ingredient(
+  recipeId TEXT NOT NULL,
+  ingredientId TEXT NOT NULL,
+  amount TEXT NOT NULL,
+  PRIMARY KEY (recipeId, ingredientId),
+  FOREIGN KEY (recipeId) REFERENCES recipe(id),
+  FOREIGN KEY (ingredientId) REFERENCES ingredient(id)
+);
+
+CREATE TABLE recipe_tag (
+  recipeId TEXT NOT NULL,
+  tagId TEXT NOT NULL,
+  PRIMARY KEY (recipeId, tagId),
+  FOREIGN KEY (recipeId) REFERENCES recipe(id),
+  FOREIGN KEY (tagId) REFERENCES tag(id)
+);
+
+selectAll:
+SELECT recipe.id, recipe.name, recipe.instructions, recipe.url, recipe.imageUrl,
+       ingredient.id AS ingredientId, ingredient.name AS ingredientName, ingredient.resourceId AS ingredientResourceId,
+       recipe_ingredient.amount,
+       ingredientTag.id AS ingredientTagId, ingredientTag.name AS ingredientTagName, ingredientTag.resourceId AS ingredientTagResourceId,
+       recipeTag.id AS recipeTagId, recipeTag.name AS recipeTagName, recipeTag.resourceId AS recipeTagResourceId
+FROM recipe
+LEFT JOIN recipe_ingredient ON recipe.id = recipe_ingredient.recipeId
+LEFT JOIN ingredient ON recipe_ingredient.ingredientId = ingredient.id
+LEFT JOIN ingredient_tag ON ingredient.id = ingredient_tag.ingredientId
+LEFT JOIN tag AS ingredientTag ON ingredient_tag.tagId = ingredientTag.id
+LEFT JOIN recipe_tag ON recipe.id = recipe_tag.recipeId
+LEFT JOIN tag AS recipeTag ON recipe_tag.tagId = recipeTag.id;
+
+insertOrReplace:
+REPLACE INTO recipe (id, name, instructions, url, imageUrl) VALUES (?, ?, ?, ?, ?);
+
+connectIngredient:
+REPLACE INTO recipe_ingredient (recipeId, ingredientId, amount) VALUES (?, ?, ?);
+
+connectTag:
+REPLACE INTO recipe_tag (recipeId, tagId) VALUES (?, ?);

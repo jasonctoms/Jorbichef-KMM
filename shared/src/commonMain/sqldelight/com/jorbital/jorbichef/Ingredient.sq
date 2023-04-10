@@ -12,13 +12,6 @@ CREATE TABLE ingredient_tag (
   FOREIGN KEY (tagId) REFERENCES tag(id)
 );
 
-insertOrReplace:
-REPLACE INTO ingredient (id, name, resourceId) VALUES (?,?,?);
-
-connectTag:
-REPLACE INTO ingredient_tag (ingredientId, tagId) VALUES (?,?);
-
-
 selectAll:
 SELECT i.id, i.name, i.resourceId, t.id AS tagId, t.name AS tagName, t.resourceId AS tagResourceId
 FROM ingredient i
@@ -29,3 +22,8 @@ LEFT JOIN (
 ) t ON i.id = t.ingredientId
 ORDER BY i.id;
 
+insertOrReplace:
+REPLACE INTO ingredient (id, name, resourceId) VALUES (?,?,?);
+
+connectTag:
+REPLACE INTO ingredient_tag (ingredientId, tagId) VALUES (?,?);

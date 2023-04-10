@@ -31,6 +31,7 @@ kotlin {
                 implementation(libs.coroutines)
                 implementation(libs.serialization)
                 implementation(libs.sqldelight.coroutines)
+                implementation(libs.kermit)
                 api(libs.koin.core)
                 api(libs.firebase.kotlin.auth)
                 api(libs.firebase.kotlin.firestore)

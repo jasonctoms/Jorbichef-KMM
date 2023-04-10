@@ -46,6 +46,7 @@ fun GreetingView(
     val tags by test.allTags(scope.coroutineContext).collectAsState(initial = emptyList())
     val ingredients by test.allIngredients(scope.coroutineContext)
         .collectAsState(initial = emptyList())
+    val recipes by test.allRecipes(scope.coroutineContext).collectAsState(initial = emptyList())
     LaunchedEffect(Unit) {
         auth.signInAnonymously()
         test.syncFromApi()
@@ -62,7 +63,9 @@ fun GreetingView(
                     Text("${tag.name} ")
                 }
             }
-
+        }
+        recipes.forEach { recipe ->
+            Text(recipe.toString())
         }
     }
 }
