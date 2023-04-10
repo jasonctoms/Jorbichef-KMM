@@ -32,6 +32,7 @@ kotlin {
                 implementation(libs.serialization)
                 implementation(libs.sqldelight.coroutines)
                 implementation(libs.kermit)
+                implementation(libs.kotlinx.datetime)
                 api(libs.koin.core)
                 api(libs.firebase.kotlin.auth)
                 api(libs.firebase.kotlin.firestore)

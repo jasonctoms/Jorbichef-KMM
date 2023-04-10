@@ -3,17 +3,24 @@ package com.jorbital.jorbichef.repository
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.jorbital.jorbichef.Database
+import com.jorbital.jorbichef.Platform
 import com.jorbital.jorbichef.api.FirestoreApi
+import com.jorbital.jorbichef.database.toRecipe
+import com.jorbital.jorbichef.database.toRecipeParts
 import com.jorbital.jorbichef.models.Ingredient
-import com.jorbital.jorbichef.models.Recipe
-import com.jorbital.jorbichef.models.RecipeIngredient
+import com.jorbital.jorbichef.models.Menu
 import com.jorbital.jorbichef.models.Tag
 import com.jorbital.jorbichef.models.firestore.IngredientDocument
 import com.jorbital.jorbichef.models.firestore.TagDocument
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.LocalDate
 import kotlin.coroutines.CoroutineContext
 
-class TestRepository(private val db: Database, private val api: FirestoreApi) {
+class TestRepository(
+    private val platform: Platform,
+    val db: Database,
+    private val api: FirestoreApi
+) {
 
     suspend fun syncFromApi() {
         val apiTags = api.getTags()
@@ -89,10 +96,18 @@ class TestRepository(private val db: Database, private val api: FirestoreApi) {
                 )
             }
         }
+        val menus = api.getMenus()
+        menus.forEach {
+            db.menuQueries.insertOrReplace(
+                id = it.id,
+                date = it.date,
+                recipeId = it.recipeId
+            )
+        }
     }
 
     fun allTags(context: CoroutineContext) =
-        db.tagQueries.selectAll().asFlow().mapToList(context).map {
+        db.tagQueries.selectAllTags().asFlow().mapToList(context).map {
             it.map { tag ->
                 Tag(
                     id = tag.id,
@@ -103,7 +118,7 @@ class TestRepository(private val db: Database, private val api: FirestoreApi) {
         }
 
     fun allIngredients(context: CoroutineContext) =
-        db.ingredientQueries.selectAll().asFlow().mapToList(context).map { queryList ->
+        db.ingredientQueries.selectAllIngredients().asFlow().mapToList(context).map { queryList ->
             val ingredients = queryList.groupBy { it.id }.map { (ingredientId, ingredientGroup) ->
                 val ingredientProperties = ingredientGroup.first()
                 val tags = ingredientGroup.filter {
@@ -126,41 +141,25 @@ class TestRepository(private val db: Database, private val api: FirestoreApi) {
         }
 
     fun allRecipes(context: CoroutineContext) =
-        db.recipeQueries.selectAll().asFlow().mapToList(context).map { queryList ->
-            val recipes = queryList.groupBy { it.id }.map { (recipeId, recipeGroup) ->
-                val recipeProperties = recipeGroup.first()
-                Recipe(
-                    id = recipeId,
-                    name = recipeProperties.name,
-                    ingredients = recipeGroup.groupBy { it.ingredientId }
-                        .map { (ingredientId, ingredientGroup) ->
-                            val ingredient = ingredientGroup[0]
-                            RecipeIngredient(
-                                ingredient.amount!!,
-                                Ingredient(
-                                    ingredientId!!,
-                                    ingredient.name,
-                                    ingredient.ingredientResourceId,
-                                    recipeGroup.filter { ingredientId == it.ingredientId }
-                                        .distinctBy { it.ingredientTagId }.map {
-                                            Tag(
-                                                it.ingredientTagId!!,
-                                                it.ingredientTagName!!,
-                                                it.ingredientTagResourceId
-                                            )
-                                        }
-                                )
-                            )
-                        },
-                    instructions = recipeProperties.instructions,
-                    url = recipeProperties.url,
-                    imageUrl = recipeProperties.imageUrl,
-                    tags = recipeGroup.groupBy { it.recipeTagId }.map { (tagId, tagGroup) ->
-                        val tag = tagGroup.first()
-                        Tag(tagId!!, tag.recipeTagName!!, tag.recipeTagResourceId)
+        db.recipeQueries.selectAllRecipes().asFlow().mapToList(context).map { queryList ->
+            val recipes = queryList.groupBy { it.id }.map { (_, recipeGroup) ->
+                recipeGroup.map { it.toRecipeParts() }.toRecipe()
+            }
+            recipes
+        }
+
+    fun allMenus(context: CoroutineContext) =
+        db.menuQueries.selectAllMenus().asFlow().mapToList(context).map { queryList ->
+            val menus = queryList.groupBy { it.date }.map { (_, menuGroup) ->
+                val menu = menuGroup.first()
+                Menu(
+                    id = menu.id,
+                    date = LocalDate.parse(menu.date),
+                    recipes = menuGroup.groupBy { it.date }.map { (_, recipeGroup) ->
+                        recipeGroup.map { it.toRecipeParts() }.toRecipe()
                     }
                 )
             }
-            recipes
+            menus
         }
 }

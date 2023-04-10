@@ -4,7 +4,7 @@ CREATE TABLE tag (
   resourceId TEXT
 );
 
-selectAll:
+selectAllTags:
 SELECT * FROM tag;
 
 insertOrReplace:

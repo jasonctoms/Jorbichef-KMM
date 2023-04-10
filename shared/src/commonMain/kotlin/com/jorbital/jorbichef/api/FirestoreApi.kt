@@ -5,9 +5,10 @@ import com.jorbital.jorbichef.models.firestore.IngredientDocument
 import com.jorbital.jorbichef.models.firestore.RecipeDocument
 import com.jorbital.jorbichef.models.firestore.RecipeIngredientDocument
 import com.jorbital.jorbichef.models.firestore.TagDocument
-import com.jorbital.jorbichef.models.firestore.WeeklyMenuDocument
+import com.jorbital.jorbichef.models.firestore.MenuDocument
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
+import kotlinx.datetime.LocalDate
 
 class FirestoreApi(private val auth: JorbichefAuth) {
     private val firestore by lazy { Firebase.firestore }
@@ -50,6 +51,14 @@ class FirestoreApi(private val auth: JorbichefAuth) {
         }
     }
 
+    suspend fun getMenus(): List<MenuDocument> {
+        val userId = auth.assertUserId()
+        return firestore.collection(USERS).document(userId)
+            .collection(MENU).get().documents.map {
+                it.data(strategy = MenuDocument.serializer())
+            }
+    }
+
     suspend fun addCustomTag(tag: TagDocument.Custom) {
         firestore.collection(USERS).document(tag.userId).collection(TAGS)
             .document(tag.id)
@@ -82,11 +91,11 @@ class FirestoreApi(private val auth: JorbichefAuth) {
         }
     }
 
-    suspend fun updateWeeklyMenu(menu: WeeklyMenuDocument) {
+    suspend fun addRecipeToMenu(menu: MenuDocument) {
         firestore.collection(USERS).document(menu.userId).collection(MENU)
             .document(menu.id)
             .set(
-                strategy = WeeklyMenuDocument.serializer(),
+                strategy = MenuDocument.serializer(),
                 data = menu
             )
     }
@@ -144,16 +153,28 @@ class FirestoreApi(private val auth: JorbichefAuth) {
                 )
             )
         )
-        updateWeeklyMenu(
-            WeeklyMenuDocument(
+        addRecipeToMenu(
+            MenuDocument(
+                id = "0",
                 userId = auth.assertUserId(),
-                monday = listOf("demo-salad"),
-                tuesday = emptyList(),
-                wednesday = listOf("demo-salad"),
-                thursday = emptyList(),
-                friday = listOf("demo-salad"),
-                saturday = emptyList(),
-                sunday = emptyList(),
+                date = LocalDate(2023, 4, 11).toString(),
+                recipeId = "demo-salad",
+            )
+        )
+        addRecipeToMenu(
+            MenuDocument(
+                id = "1",
+                userId = auth.assertUserId(),
+                date = LocalDate(2023, 4, 11).toString(),
+                recipeId = "demo-salad",
+            )
+        )
+        addRecipeToMenu(
+            MenuDocument(
+                id = "2",
+                userId = auth.assertUserId(),
+                date = LocalDate(2023, 4, 12).toString(),
+                recipeId = "demo-salad",
             )
         )
     }

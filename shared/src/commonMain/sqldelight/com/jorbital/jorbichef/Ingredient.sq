@@ -12,7 +12,7 @@ CREATE TABLE ingredient_tag (
   FOREIGN KEY (tagId) REFERENCES tag(id)
 );
 
-selectAll:
+selectAllIngredients:
 SELECT i.id, i.name, i.resourceId, t.id AS tagId, t.name AS tagName, t.resourceId AS tagResourceId
 FROM ingredient i
 LEFT JOIN (

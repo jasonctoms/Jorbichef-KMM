@@ -5,7 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
@@ -17,9 +19,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.jorbital.jorbichef.Greeting
 import com.jorbital.jorbichef.android.theme.JorbichefTheme
 import com.jorbital.jorbichef.auth.JorbichefAuth
+import com.jorbital.jorbichef.models.Ingredient
 import com.jorbital.jorbichef.repository.TestRepository
 import org.koin.compose.koinInject
 
@@ -47,6 +51,7 @@ fun GreetingView(
     val ingredients by test.allIngredients(scope.coroutineContext)
         .collectAsState(initial = emptyList())
     val recipes by test.allRecipes(scope.coroutineContext).collectAsState(initial = emptyList())
+    val menus by test.allMenus(scope.coroutineContext).collectAsState(initial = emptyList())
     LaunchedEffect(Unit) {
         auth.signInAnonymously()
         test.syncFromApi()
@@ -56,16 +61,37 @@ fun GreetingView(
         tags.forEach { tag ->
             Text(tag.name)
         }
+        Spacer(modifier = Modifier.height(8.dp))
         ingredients.forEach { ingredient ->
-            Row {
-                Text("${ingredient.name} - ")
-                ingredient.tags.forEach { tag ->
-                    Text("${tag.name} ")
-                }
+            Ingredient(ingredient)
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        recipes.forEach { recipe ->
+            Text(recipe.name)
+            recipe.tags.forEach {
+                Text(it.name)
+            }
+            recipe.ingredients.forEach { ingredient ->
+                Ingredient(ingredient.ingredient, ingredient.amount)
             }
         }
-        recipes.forEach { recipe ->
-            Text(recipe.toString())
+        Spacer(modifier = Modifier.height(8.dp))
+        menus.forEach { menu ->
+            Text("${menu.date}")
+            menu.recipes.forEach { recipe ->
+                Text(recipe.name) }
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+    }
+}
+
+@Composable
+private fun Ingredient(ingredient: Ingredient, amount: String? = null) {
+    Row {
+        amount?.let { Text("$it ") }
+        Text("${ingredient.name} - ")
+        ingredient.tags.forEach { tag ->
+            Text("${tag.name} ")
         }
     }
 }

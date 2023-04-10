@@ -23,7 +23,7 @@ CREATE TABLE recipe_tag (
   FOREIGN KEY (tagId) REFERENCES tag(id)
 );
 
-selectAll:
+selectAllRecipes:
 SELECT recipe.id, recipe.name, recipe.instructions, recipe.url, recipe.imageUrl,
        ingredient.id AS ingredientId, ingredient.name AS ingredientName, ingredient.resourceId AS ingredientResourceId,
        recipe_ingredient.amount,
